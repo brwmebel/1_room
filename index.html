@@ -161,33 +161,34 @@
             right: 10px;
         }
         
-        /* Исправления для фото в шкаф+тумба - ПЕРВЫЕ ФОТО 900×668 */
+        /* Исправления для фото в спальне (комната) - ПЕРВЫЕ ФОТО 900×668 */
         /* Для первых фото (11, 21, 31) - cover со смещением вверх */
         .carousel-item img[src*="11.jpg"],
         .carousel-item img[src*="21.jpg"],
         .carousel-item img[src*="31.jpg"] {
             object-fit: cover;
             background-color: white;
-            object-position: center 30%; /* Смещаем вверх на 30% чтобы не обрезало верх */
+            object-position: center 30%;
         }
         
-        /* Для вторых фото (12, 22, 32) - contain с белым фоном */
+        /* Для остальных фото спальни - contain с белым фоном */
         .carousel-item img[src*="12.jpg"],
-        .carousel-item img[src*="22.jpg"],
-        .carousel-item img[src*="32.jpg"] {
-            object-fit: contain;
-            background-color: white;
-        }
-        
-        /* Для третьих фото (13, 23, 33) - contain с белым фоном */
         .carousel-item img[src*="13.jpg"],
+        .carousel-item img[src*="14.jpg"],
+        .carousel-item img[src*="15.jpg"],
+        .carousel-item img[src*="22.jpg"],
         .carousel-item img[src*="23.jpg"],
-        .carousel-item img[src*="33.jpg"] {
+        .carousel-item img[src*="24.jpg"],
+        .carousel-item img[src*="25.jpg"],
+        .carousel-item img[src*="32.jpg"],
+        .carousel-item img[src*="33.jpg"],
+        .carousel-item img[src*="34.jpg"],
+        .carousel-item img[src*="35.jpg"] {
             object-fit: contain;
             background-color: white;
         }
         
-        /* Увеличиваем высоту карусели для шкаф+тумба для лучшего отображения */
+        /* Увеличиваем высоту карусели для спальни для лучшего отображения */
         .section:first-child .carousel {
             height: 240px;
         }
@@ -340,7 +341,7 @@
             .kitchen-photo {
                 height: 200px;
             }
-            /* Адаптация для шкаф+тумба на мобильных */
+            /* Адаптация для спальни на мобильных */
             .section:first-child .carousel {
                 height: 220px;
             }
@@ -361,23 +362,29 @@
 
     <div class="container">
 
-        <!-- Шкаф + тумба -->
+        <!-- Спальня (комната) -->
         <section class="section">
-            <h2>Шкаф + тумба</h2>
+            <h2>Спальня (комната)</h2>
             <p>Выберите один из трёх вариантов комплектации:</p>
             <div class="variant-grid">
-                <!-- Вариант 1 - Карусель с фото 11, 12, 13 -->
+                <!-- Вариант 1 - Карусель с фото 11, 12, 13, 14, 15 -->
                 <div class="variant-card">
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/спальня/11.jpg" alt="Шкаф+тумба Вариант 1 — фото 1">
+                                <img src="images/спальня/11.jpg" alt="Спальня Вариант 1 — фото 1">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/12.jpg" alt="Шкаф+тумба Вариант 1 — фото 2">
+                                <img src="images/спальня/12.jpg" alt="Спальня Вариант 1 — фото 2">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/13.jpg" alt="Шкаф+тумба Вариант 1 — фото 3">
+                                <img src="images/спальня/13.jpg" alt="Спальня Вариант 1 — фото 3">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/14.jpg" alt="Спальня Вариант 1 — фото 4">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/15.jpg" alt="Спальня Вариант 1 — фото 5">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -386,25 +393,32 @@
                     <div class="variant-content">
                         <h3>Вариант 1</h3>
                         <ul>
-                            <li><strong>Шкаф Ш×В×Г:</strong> 1200 × 2205 × 550 мм</li>
-                            <li><strong>Тумба Ш×В×Г:</strong> 800 × 917 × 460 мм</li>
-                            <li><strong>Цвет:</strong> Кашемир</li>
+                            <li>Шкаф 3х створчатый с консолью - 1 шт.</li>
+                            <li>Тумба прикроватная - 1 шт.</li>
+                            <li>Кровать мягкая ширина 140 или 160×200 см (на выбор) - 1 шт.</li>
+                            <li>Матрас ортопедический - 1 шт.</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Вариант 2 - Карусель с фото 21, 22, 23 -->
+                <!-- Вариант 2 - Карусель с фото 21, 22, 23, 24, 25 -->
                 <div class="variant-card">
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/спальня/21.jpg" alt="Шкаф+тумба Вариант 2 — фото 1">
+                                <img src="images/спальня/21.jpg" alt="Спальня Вариант 2 — фото 1">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/22.jpg" alt="Шкаф+тумба Вариант 2 — фото 2">
+                                <img src="images/спальня/22.jpg" alt="Спальня Вариант 2 — фото 2">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/23.jpg" alt="Шкаф+тумба Вариант 2 — фото 3">
+                                <img src="images/спальня/23.jpg" alt="Спальня Вариант 2 — фото 3">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/24.jpg" alt="Спальня Вариант 2 — фото 4">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/25.jpg" alt="Спальня Вариант 2 — фото 5">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -413,25 +427,32 @@
                     <div class="variant-content">
                         <h3>Вариант 2</h3>
                         <ul>
-                            <li><strong>Шкаф Ш×В×Г:</strong> 1300 × 2300 × 570 мм</li>
-                            <li><strong>Тумба Ш×В×Г:</strong> 900 × 1000 × 520 мм</li>
-                            <li><strong>Цвет:</strong> Винтерберг/Темно-серый</li>
+                            <li>Шкаф 3х створчатый с консолью - 1 шт.</li>
+                            <li>Тумба прикроватная - 1 шт.</li>
+                            <li>Кровать мягкая ширина 140 или 160×200 см (на выбор) - 1 шт.</li>
+                            <li>Матрас ортопедический - 1 шт.</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Вариант 3 - Карусель с фото 31, 32, 33 -->
+                <!-- Вариант 3 - Карусель с фото 31, 32, 33, 34, 35 -->
                 <div class="variant-card">
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/спальня/31.jpg" alt="Шкаф+тумба Вариант 3 — фото 1">
+                                <img src="images/спальня/31.jpg" alt="Спальня Вариант 3 — фото 1">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/32.jpg" alt="Шкаф+тумба Вариант 3 — фото 2">
+                                <img src="images/спальня/32.jpg" alt="Спальня Вариант 3 — фото 2">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/33.jpg" alt="Шкаф+тумба Вариант 3 — фото 3">
+                                <img src="images/спальня/33.jpg" alt="Спальня Вариант 3 — фото 3">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/34.jpg" alt="Спальня Вариант 3 — фото 4">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/35.jpg" alt="Спальня Вариант 3 — фото 5">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -440,9 +461,10 @@
                     <div class="variant-content">
                         <h3>Вариант 3</h3>
                         <ul>
-                            <li><strong>Шкаф Ш×В×Г:</strong> 1300 × 2100 × 550 мм</li>
-                            <li><strong>Тумба Ш×В×Г:</strong> 900 × 900 × 500 мм</li>
-                            <li><strong>Цвет:</strong> Дуб крафт золотой</li>
+                            <li>Шкаф 3х створчатый с консолью - 1 шт.</li>
+                            <li>Тумба прикроватная - 1 шт.</li>
+                            <li>Кровать мягкая ширина 140 или 160×200 см (на выбор) - 1 шт.</li>
+                            <li>Матрас ортопедический - 1 шт.</li>
                         </ul>
                     </div>
                 </div>
@@ -451,7 +473,7 @@
 
         <!-- Диван -->
         <section class="section">
-            <h2>Диван / Мягкая кровать с матрасом</h2>
+            <h2>Диван для кухни-гостиной или в спальню</h2>
             <div class="variant-grid">
                 <!-- Вариант 1 -->
                 <div class="variant-card">
@@ -511,7 +533,7 @@
                     </div>
                 </div>
 
-                <!-- Вариант 3 - ИЗМЕНЕНЫ ФОТО И ОПИСАНИЕ -->
+                <!-- Вариант 3 - ИЗМЕНЕНО ОПИСАНИЕ -->
                 <div class="variant-card">
                     <div class="carousel">
                         <div class="carousel-inner">
@@ -531,9 +553,11 @@
                     <div class="variant-content">
                         <h3>Вариант 3</h3>
                         <div class="specs">
-                            <div class="spec-item"><strong>Размеры (Ш×Г×В):</strong> 1730×1135×2200 мм</div>
-                            <div class="spec-item"><strong>Спальное место:</strong> 1600×2000 мм</div>
-                            <div class="spec-item"><strong>Кровать:</strong> Мягкая с ортопедическим матрасом и основанием</div>
+                            <div class="spec-item"><strong>Размеры (Ш×Г×В), мм:</strong> 2050×1010×760</div>
+                            <div class="spec-item"><strong>Спальное место:</strong> 1500×200 мм</div>
+                            <div class="spec-item"><strong>Высота сиденья от пола:</strong> 450 мм</div>
+                            <div class="spec-item"><strong>Тип трансформации:</strong> Еврокнижка</div>
+                            <div class="spec-item"><strong>Наполнитель:</strong> пенополиуретан, независимый пружинный блок, сорель</div>
                         </div>
                     </div>
                 </div>
@@ -684,7 +708,7 @@
                     </div>
                 </div>
 
-                <!-- Вариант 3 - Карусель с 2 фото (ЗАМЕНЕНО ВТОРОЕ ФОТО) -->
+                <!-- Вариант 3 - Карусель с 2 фото -->
                 <div class="variant-card">
                     <div class="carousel">
                         <div class="carousel-inner">
