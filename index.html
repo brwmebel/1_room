@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Пакет стандарт для Студии</title>
+    <title>Пакет стандарт для 1-комнатной квартиры</title>
     <style>
         * {
             margin: 0;
@@ -117,7 +117,7 @@
             overflow: hidden;
             border-radius: 10px 10px 0 0;
             height: 220px;
-            background-color: white; /* Добавил белый фон для прихожей */
+            background-color: white;
         }
         .carousel-inner {
             display: flex;
@@ -161,16 +161,17 @@
             right: 10px;
         }
         
-        /* Исправления для фото спальни - разные стили для разных фото */
-        /* Первые фото (11, 21, 31) - contain с белым фоном */
+        /* Исправления для фото в шкаф+тумба - ПЕРВЫЕ ФОТО 900×668 */
+        /* Для первых фото (11, 21, 31) - cover со смещением вверх */
         .carousel-item img[src*="11.jpg"],
         .carousel-item img[src*="21.jpg"],
         .carousel-item img[src*="31.jpg"] {
-            object-fit: contain;
+            object-fit: cover;
             background-color: white;
+            object-position: center 30%; /* Смещаем вверх на 30% чтобы не обрезало верх */
         }
         
-        /* Вторые фото (12, 22, 32) - contain с белым фоном, увеличенные */
+        /* Для вторых фото (12, 22, 32) - contain с белым фоном */
         .carousel-item img[src*="12.jpg"],
         .carousel-item img[src*="22.jpg"],
         .carousel-item img[src*="32.jpg"] {
@@ -178,12 +179,17 @@
             background-color: white;
         }
         
-        /* Третьи фото (13, 23, 33) - contain с белым фоном */
+        /* Для третьих фото (13, 23, 33) - contain с белым фоном */
         .carousel-item img[src*="13.jpg"],
         .carousel-item img[src*="23.jpg"],
         .carousel-item img[src*="33.jpg"] {
             object-fit: contain;
             background-color: white;
+        }
+        
+        /* Увеличиваем высоту карусели для шкаф+тумба для лучшего отображения */
+        .section:first-child .carousel {
+            height: 240px;
         }
         
         /* Стили для стульев */
@@ -334,105 +340,114 @@
             .kitchen-photo {
                 height: 200px;
             }
+            /* Адаптация для шкаф+тумба на мобильных */
+            .section:first-child .carousel {
+                height: 220px;
+            }
+            .carousel-item img[src*="11.jpg"],
+            .carousel-item img[src*="21.jpg"],
+            .carousel-item img[src*="31.jpg"] {
+                object-position: center 25%;
+            }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Пакет стандарт для Студии</h1>
+        <h1>Пакет стандарт для 1-комнатной квартиры</h1>
         <p>Полная комплектация мебелью. Три варианта на выбор в каждом модуле.</p>
     </header>
 
     <div class="container">
 
         <!-- Шкаф + тумба -->
-<section class="section">
-    <h2>Шкаф + тумба</h2>
-    <p>Выберите один из трёх вариантов комплектации:</p>
-    <div class="variant-grid">
-        <!-- Вариант 1 - Карусель с фото 11, 12, 13 -->
-        <div class="variant-card">
-            <div class="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="images/спальня/11.jpg" alt="Шкаф+тумба Вариант 1 — фото 1">
+        <section class="section">
+            <h2>Шкаф + тумба</h2>
+            <p>Выберите один из трёх вариантов комплектации:</p>
+            <div class="variant-grid">
+                <!-- Вариант 1 - Карусель с фото 11, 12, 13 -->
+                <div class="variant-card">
+                    <div class="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="images/спальня/11.jpg" alt="Шкаф+тумба Вариант 1 — фото 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/12.jpg" alt="Шкаф+тумба Вариант 1 — фото 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/13.jpg" alt="Шкаф+тумба Вариант 1 — фото 3">
+                            </div>
+                        </div>
+                        <button class="carousel-btn prev">‹</button>
+                        <button class="carousel-btn next">›</button>
                     </div>
-                    <div class="carousel-item">
-                        <img src="images/спальня/12.jpg" alt="Шкаф+тумба Вариант 1 — фото 2">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="images/спальня/13.jpg" alt="Шкаф+тумба Вариант 1 — фото 3">
+                    <div class="variant-content">
+                        <h3>Вариант 1</h3>
+                        <ul>
+                            <li><strong>Шкаф Ш×В×Г:</strong> 1200 × 2205 × 550 мм</li>
+                            <li><strong>Тумба Ш×В×Г:</strong> 800 × 917 × 460 мм</li>
+                            <li><strong>Цвет:</strong> Кашемир</li>
+                        </ul>
                     </div>
                 </div>
-                <button class="carousel-btn prev">‹</button>
-                <button class="carousel-btn next">›</button>
-            </div>
-            <div class="variant-content">
-                <h3>Вариант 1</h3>
-                <ul>
-                    <li><strong>Шкаф Ш×В×Г:</strong> 1200 × 2205 × 550 мм</li>
-                    <li><strong>Тумба Ш×В×Г:</strong> 800 × 917 × 460 мм</li>
-                    <li><strong>Цвет:</strong> Кашемир</li>
-                </ul>
-            </div>
-        </div>
 
-        <!-- Вариант 2 - Карусель с фото 21, 22, 23 -->
-        <div class="variant-card">
-            <div class="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="images/спальня/21.jpg" alt="Шкаф+тумба Вариант 2 — фото 1">
+                <!-- Вариант 2 - Карусель с фото 21, 22, 23 -->
+                <div class="variant-card">
+                    <div class="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="images/спальня/21.jpg" alt="Шкаф+тумба Вариант 2 — фото 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/22.jpg" alt="Шкаф+тумба Вариант 2 — фото 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/23.jpg" alt="Шкаф+тумба Вариант 2 — фото 3">
+                            </div>
+                        </div>
+                        <button class="carousel-btn prev">‹</button>
+                        <button class="carousel-btn next">›</button>
                     </div>
-                    <div class="carousel-item">
-                        <img src="images/спальня/22.jpg" alt="Шкаф+тумба Вариант 2 — фото 2">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="images/спальня/23.jpg" alt="Шкаф+тумба Вариант 2 — фото 3">
+                    <div class="variant-content">
+                        <h3>Вариант 2</h3>
+                        <ul>
+                            <li><strong>Шкаф Ш×В×Г:</strong> 1300 × 2300 × 570 мм</li>
+                            <li><strong>Тумба Ш×В×Г:</strong> 900 × 1000 × 520 мм</li>
+                            <li><strong>Цвет:</strong> Винтерберг/Темно-серый</li>
+                        </ul>
                     </div>
                 </div>
-                <button class="carousel-btn prev">‹</button>
-                <button class="carousel-btn next">›</button>
-            </div>
-            <div class="variant-content">
-                <h3>Вариант 2</h3>
-                <ul>
-                    <li><strong>Шкаф Ш×В×Г:</strong> 1300 × 2300 × 570 мм</li>
-                    <li><strong>Тумба Ш×В×Г:</strong> 900 × 1000 × 520 мм</li>
-                    <li><strong>Цвет:</strong> Винтерберг/Темно-серый</li>
-                </ul>
-            </div>
-        </div>
 
-        <!-- Вариант 3 - Карусель с фото 31, 32, 33 -->
-        <div class="variant-card">
-            <div class="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="images/спальня/31.jpg" alt="Шкаф+тумба Вариант 3 — фото 1">
+                <!-- Вариант 3 - Карусель с фото 31, 32, 33 -->
+                <div class="variant-card">
+                    <div class="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="images/спальня/31.jpg" alt="Шкаф+тумба Вариант 3 — фото 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/32.jpg" alt="Шкаф+тумба Вариант 3 — фото 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="images/спальня/33.jpg" alt="Шкаф+тумба Вариант 3 — фото 3">
+                            </div>
+                        </div>
+                        <button class="carousel-btn prev">‹</button>
+                        <button class="carousel-btn next">›</button>
                     </div>
-                    <div class="carousel-item">
-                        <img src="images/спальня/32.jpg" alt="Шкаф+тумба Вариант 3 — фото 2">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="images/спальня/33.jpg" alt="Шкаф+тумба Вариант 3 — фото 3">
+                    <div class="variant-content">
+                        <h3>Вариант 3</h3>
+                        <ul>
+                            <li><strong>Шкаф Ш×В×Г:</strong> 1300 × 2100 × 550 мм</li>
+                            <li><strong>Тумба Ш×В×Г:</strong> 900 × 900 × 500 мм</li>
+                            <li><strong>Цвет:</strong> Дуб крафт золотой</li>
+                        </ul>
                     </div>
                 </div>
-                <button class="carousel-btn prev">‹</button>
-                <button class="carousel-btn next">›</button>
             </div>
-            <div class="variant-content">
-                <h3>Вариант 3</h3>
-                <ul>
-                    <li><strong>Шкаф Ш×В×Г:</strong> 1300 × 2100 × 550 мм</li>
-                    <li><strong>Тумба Ш×В×Г:</strong> 900 × 900 × 500 мм</li>
-                    <li><strong>Цвет:</strong> Дуб крафт золотой</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
         <!-- Диван -->
         <section class="section">
@@ -686,7 +701,7 @@
                     <div class="variant-content">
                         <h3>Вариант 3</h3>
                         <p>Комплект: 900×2205×356 мм (Ш×В×Г)</p>
-                        <p><small>Цвет Кашемир</small></p>
+                        <p><small>Вторая фотография демонстрирует пример другой конфигурации</small></p>
                     </div>
                 </div>
             </div>
@@ -738,10 +753,10 @@
 
         <!-- Дополнительная информация -->
         <section class="package-details">
-            <h3>📋 Полный комплект пакета "Стандарт для Студии":</h3>
+            <h3>📋 Полный комплект пакета "Стандарт для 1-комнатной квартиры":</h3>
             <ul>
                 <li>Шкаф + комод</li>
-                <li>Диван или кровать с матрасом</li> <!-- ИСПРАВЛЕНО -->
+                <li>Диван или кровать с матрасом</li>
                 <li>Обеденная группа (стол + 2 стула)</li>
                 <li>Комплект для прихожей</li>
                 <li>Кухонный гарнитур:
@@ -751,7 +766,7 @@
                         <li>Столешница 38 мм</li>
                         <li>Стеновая панель</li>
                         <li>Мойка иск.камень + смеситель</li>
-                        <li>Сушилка двухуровневая</li> <!-- ДОБАВЛЕНО -->
+                        <li>Сушилка двухуровневая</li>
                     </ul>
                 </li>
                 <li>Техника:
@@ -776,7 +791,7 @@
     </div>
 
     <footer>
-        <p>© 2026 Пакет стандарт для Студии</p>
+        <p>© 2026 Пакет стандарт для 1-комнатной квартиры</p>
         <p>Контакты: 8-911-925-88-56 | Brwmebelspb@yandex.ru</p>
     </footer>
 
@@ -808,5 +823,3 @@
 
 </body>
 </html>
-
-
