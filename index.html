@@ -15,6 +15,7 @@
             background-color: #f9f9f9;
             color: #333;
             line-height: 1.6;
+            scroll-behavior: smooth;
         }
         header {
             background: linear-gradient(to right, #2c3e50, #4a6491);
@@ -43,6 +44,13 @@
             margin-bottom: 30px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             border-left: 5px solid #4a6491;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         .section h2 {
             color: #2c3e50;
@@ -69,6 +77,14 @@
             border: 1px solid #d1d8e0;
             transition: transform 0.3s;
             overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: relative;
+        }
+        .variant-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         .variant-card:hover {
             transform: translateY(-5px);
@@ -79,6 +95,7 @@
             height: 220px;
             object-fit: cover;
             border-bottom: 2px solid #4a6491;
+            cursor: pointer;
         }
         .variant-content {
             padding: 20px;
@@ -117,7 +134,6 @@
             overflow: hidden;
             border-radius: 10px 10px 0 0;
             height: 220px;
-            background-color: white;
         }
         .carousel-inner {
             display: flex;
@@ -135,6 +151,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            cursor: pointer;
         }
         .carousel-btn {
             position: absolute;
@@ -161,8 +178,7 @@
             right: 10px;
         }
         
-        /* Исправления для фото в спальне (комната) - ПЕРВЫЕ ФОТО 900×668 */
-        /* Для первых фото (11, 21, 31) - cover со смещением вверх */
+        /* Исправления для фото в спальне */
         .carousel-item img[src*="11.jpg"],
         .carousel-item img[src*="21.jpg"],
         .carousel-item img[src*="31.jpg"] {
@@ -171,7 +187,6 @@
             object-position: center 30%;
         }
         
-        /* Для остальных фото спальни - contain с белым фоном */
         .carousel-item img[src*="12.jpg"],
         .carousel-item img[src*="13.jpg"],
         .carousel-item img[src*="14.jpg"],
@@ -188,7 +203,6 @@
             background-color: white;
         }
         
-        /* Увеличиваем высоту карусели для спальни для лучшего отображения */
         .section:first-child .carousel {
             height: 240px;
         }
@@ -212,6 +226,7 @@
         .chair-item {
             text-align: center;
             width: 200px;
+            position: relative;
         }
         .chair-item img {
             width: 100%;
@@ -222,6 +237,7 @@
             border: 2px solid #ddd;
             transition: transform 0.3s;
             padding: 5px;
+            cursor: pointer;
         }
         .chair-item img:hover {
             transform: scale(1.05);
@@ -239,7 +255,7 @@
             margin-top: 20px;
         }
         
-        /* Обеденная группа - карусели увеличены */
+        /* Обеденная группа */
         .section:nth-child(3) .carousel {
             height: 250px;
         }
@@ -248,7 +264,7 @@
             background-color: #f5f5f5;
         }
         
-        /* Кухня - стили для вариантов */
+        /* Кухня */
         .kitchen-photo {
             width: 100%;
             height: 220px;
@@ -256,9 +272,10 @@
             background-color: #f5f5f5;
             border-radius: 8px;
             padding: 10px;
+            cursor: pointer;
         }
         
-        /* Прихожая - карусели с object-fit: contain */
+        /* Прихожая - ВОССТАНАВЛИВАЕМ КАРУСЕЛИ */
         .section:nth-child(4) .carousel-item img {
             object-fit: contain;
             background-color: white;
@@ -296,17 +313,878 @@
             margin-bottom: 8px;
         }
         
-        .image-placeholder {
-            background: #ddd;
-            height: 200px;
-            border-radius: 10px;
+        /* ========== НОВЫЕ ФИЧИ ========== */
+        
+        /* 1. Прогресс-бар прокрутки */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            z-index: 9999;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #4a6491, #3498db);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(74, 100, 145, 0.5);
+        }
+        
+        /* 2. Быстрая навигация */
+        .quick-nav {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1001;
+            background: rgba(255,255,255,0.95);
+            padding: 15px 10px;
+            border-radius: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .quick-nav a {
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #777;
-            margin: 20px 0;
-            font-size: 1.1rem;
+            width: 45px;
+            height: 45px;
+            background: #f1f5f9;
+            border-radius: 50%;
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
         }
+        
+        .quick-nav a:hover {
+            background: #4a6491;
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .quick-nav a.active {
+            background: #4a6491;
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .quick-nav a::before {
+            content: attr(data-title);
+            position: absolute;
+            right: 55px;
+            background: #2c3e50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        
+        .quick-nav a:hover::before {
+            opacity: 1;
+        }
+        
+        /* 3. Telegram кнопка */
+        .telegram-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, #0088cc, #34b7f1);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            opacity: 0;
+        }
+        
+        .telegram-float:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 136, 204, 0.6);
+            background: linear-gradient(135deg, #0077b5, #2aa8eb);
+        }
+        
+        .telegram-icon {
+            font-size: 24px;
+            animation: bounce 2s infinite;
+        }
+        
+        .telegram-text {
+            font-size: 16px;
+            white-space: nowrap;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4); }
+            50% { box-shadow: 0 6px 25px rgba(0, 136, 204, 0.7); }
+            100% { box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        /* 4. Модальное окно для фото - ИСПРАВЛЕННАЯ ВЕРСИЯ */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 85%;
+            position: relative;
+            animation: zoomIn 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .modal-img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: calc(85vh - 40px);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            object-fit: contain;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 36px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+            z-index: 2001;
+        }
+        
+        .modal-close:hover {
+            transform: scale(1.2);
+        }
+        
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            opacity: 0.7;
+            z-index: 2001;
+        }
+        
+        .modal-nav:hover {
+            background: rgba(255,255,255,0.3);
+            opacity: 1;
+        }
+        
+        .modal-prev {
+            left: 20px;
+        }
+        
+        .modal-next {
+            right: 20px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        /* 5. Для фотографий, которые можно увеличить */
+        .zoomable {
+            cursor: zoom-in;
+            transition: transform 0.3s;
+        }
+        
+        .zoomable:hover {
+            transform: scale(1.02);
+        }
+        
+        /* 6. Интерактивный чек-лист + кнопка заявки */
+        .checklist-container {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            z-index: 1000;
+            padding: 20px;
+            width: 320px;
+            max-height: 450px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .checklist-container.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        /* Стиль для кнопки чек-листа со счетчиком */
+        .checklist-toggle {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            background: #4a6491;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 5px 15px rgba(74, 100, 145, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .checklist-toggle:hover {
+            transform: scale(1.1);
+            background: #2c3e50;
+        }
+        
+        .checklist-toggle.active {
+            background: #2c3e50;
+        }
+        
+        /* Счётчик на кнопке */
+        .checklist-counter {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulseCounter 0.5s ease;
+        }
+        
+        @keyframes pulseCounter {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        
+        .checklist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .checklist-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .checklist-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .checklist-btn {
+            background: #4a6491;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+        
+        .checklist-btn:hover {
+            background: #2c3e50;
+        }
+        
+        .checklist-btn.clear {
+            background: #e74c3c;
+        }
+        
+        .checklist-btn.clear:hover {
+            background: #c0392b;
+        }
+        
+        .checklist-btn.order {
+            background: #27ae60;
+            font-weight: bold;
+            animation: glow 2s infinite;
+        }
+        
+        .checklist-btn.order:hover {
+            background: #219653;
+            animation: none;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(39, 174, 96, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(39, 174, 96, 0.8); }
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.3s;
+        }
+        
+        .checklist-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .checklist-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .checklist-label {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .checklist-category {
+            background: #f1f5f9;
+            padding: 8px 12px;
+            margin: 10px 0 5px 0;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        
+        .checklist-summary {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e8f4fc;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .checklist-empty {
+            text-align: center;
+            color: #95a5a6;
+            padding: 20px;
+            font-style: italic;
+        }
+        
+        /* Улучшенная кнопка выбора */
+        .select-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            z-index: 5;
+            opacity: 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .variant-card:hover .select-btn {
+            opacity: 1;
+        }
+        
+        .chair-item:hover .select-btn {
+            opacity: 1;
+        }
+        
+        .select-btn.selected {
+            background: #27ae60;
+            color: white;
+            opacity: 1;
+            animation: selectPulse 0.5s ease;
+        }
+        
+        .select-btn:hover {
+            transform: scale(1.1);
+            background: white;
+            color: #4a6491;
+        }
+        
+        .select-btn.selected:hover {
+            background: #219653;
+            color: white;
+        }
+        
+        @keyframes selectPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .select-btn.small {
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            opacity: 1;
+        }
+        
+        /* Подсказка для кнопки выбора */
+        .select-tooltip {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: #2c3e50;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .select-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 15px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #2c3e50;
+        }
+        
+        .select-btn:hover .select-tooltip {
+            opacity: 1;
+        }
+        
+        /* 7. Модальное окно заявки */
+        .order-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2002;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            padding: 20px;
+        }
+        
+        .order-modal.active {
+            display: flex;
+        }
+        
+        .order-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .order-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .order-close {
+            background: none;
+            border: none;
+            font-size: 30px;
+            color: #95a5a6;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .order-close:hover {
+            background: #f1f5f9;
+            color: #2c3e50;
+        }
+        
+        .order-preview {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #4a6491;
+        }
+        
+        .order-preview-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .order-items {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .order-item {
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+            font-size: 14px;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .required::after {
+            content: "*";
+            color: #e74c3c;
+        }
+        
+        .form-input {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #4a6491;
+            box-shadow: 0 0 0 3px rgba(74, 100, 145, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-note {
+            font-size: 12px;
+            color: #95a5a6;
+            margin-top: -5px;
+        }
+        
+        .order-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .order-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .order-btn.telegram {
+            background: linear-gradient(135deg, #0088cc, #34b7f1);
+            color: white;
+        }
+        
+        .order-btn.telegram:hover {
+            background: linear-gradient(135deg, #0077b5, #2aa8eb);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.3);
+        }
+        
+        .order-btn.copy {
+            background: #f1f5f9;
+            color: #2c3e50;
+            border: 2px solid #ddd;
+        }
+        
+        .order-btn.copy:hover {
+            background: #e8f4fc;
+            border-color: #4a6491;
+            transform: translateY(-2px);
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            color: #27ae60;
+        }
+        
+        .success-message.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        /* Улучшенное уведомление */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideInRight 0.3s ease, fadeOut 0.3s 2.7s ease;
+            max-width: 300px;
+        }
+        
+        .notification.remove {
+            background: #e74c3c;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        /* Предупреждение о пустой заявке */
+        .warning-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2003;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .warning-modal.active {
+            display: flex;
+        }
+        
+        .warning-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            text-align: center;
+            animation: slideUp 0.3s ease;
+        }
+        
+        .warning-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #f1c40f;
+        }
+        
+        .warning-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .warning-text {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .warning-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .warning-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .warning-btn.primary {
+            background: #4a6491;
+            color: white;
+        }
+        
+        .warning-btn.secondary {
+            background: #f1f5f9;
+            color: #2c3e50;
+        }
+        
+        .warning-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         footer {
             text-align: center;
             padding: 30px;
@@ -314,6 +1192,7 @@
             color: white;
             margin-top: 40px;
         }
+        
         @media (max-width: 768px) {
             .variant-grid {
                 grid-template-columns: 1fr;
@@ -335,13 +1214,6 @@
             .chair-item img {
                 height: 160px;
             }
-            .section:nth-child(3) .carousel {
-                height: 220px;
-            }
-            .kitchen-photo {
-                height: 200px;
-            }
-            /* Адаптация для спальни на мобильных */
             .section:first-child .carousel {
                 height: 220px;
             }
@@ -350,41 +1222,280 @@
             .carousel-item img[src*="31.jpg"] {
                 object-position: center 25%;
             }
+            
+            /* Адаптив для новых фич */
+            .telegram-float {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 16px;
+            }
+            
+            .telegram-text {
+                font-size: 14px;
+            }
+            
+            .telegram-icon {
+                font-size: 20px;
+            }
+            
+            .telegram-float:hover {
+                transform: none;
+            }
+            
+            .modal-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .modal-prev {
+                left: 10px;
+            }
+            
+            .modal-next {
+                right: 10px;
+            }
+            
+            .modal-close {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .quick-nav {
+                right: 10px;
+                padding: 10px 5px;
+                gap: 8px;
+            }
+            
+            .quick-nav a {
+                width: 40px;
+                height: 40px;
+                font-size: 12px;
+            }
+            
+            .checklist-container {
+                width: calc(100% - 40px);
+                left: 20px;
+                right: 20px;
+                max-height: 350px;
+            }
+            
+            .checklist-toggle {
+                bottom: 90px;
+                left: 20px;
+            }
+            
+            .order-content {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .order-actions {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .quick-nav {
+                display: none;
+            }
+            
+            .checklist-container {
+                width: calc(100% - 30px);
+                left: 15px;
+                right: 15px;
+            }
+            
+            .checklist-toggle {
+                left: 15px;
+            }
+            
+            .order-title {
+                font-size: 20px;
+            }
+            
+            .order-btn {
+                padding: 12px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header>
+    <!-- Прогресс-бар прокрутки -->
+    <div class="scroll-progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Быстрая навигация -->
+    <nav class="quick-nav" id="quickNav">
+        <a href="#bedroom" data-title="Спальня">🛏️</a>
+        <a href="#sofa" data-title="Диван">🛋️</a>
+        <a href="#dining" data-title="Обеденная">🍽️</a>
+        <a href="#hallway" data-title="Прихожая">🚪</a>
+        <a href="#kitchen" data-title="Кухня">🍳</a>
+        <a href="#top" data-title="Наверх">⬆️</a>
+    </nav>
+
+    <!-- Интерактивный чек-лист с кнопкой заявки -->
+    <button class="checklist-toggle" id="checklistToggle" title="Список выбора. Нажмите для просмотра">📋</button>
+    <div class="checklist-container" id="checklistContainer">
+        <div class="checklist-header">
+            <div class="checklist-title">Мой выбор</div>
+            <div class="checklist-actions">
+                <button class="checklist-btn order" id="orderBtn">📝 Заявка</button>
+                <button class="checklist-btn clear" id="clearChecklist">Очистить</button>
+            </div>
+        </div>
+        <div id="checklistItems">
+            <div class="checklist-empty">Выберите понравившиеся варианты</div>
+        </div>
+        <div class="checklist-summary" id="checklistSummary">
+            <span>Выбрано: <strong id="selectedCount">0</strong> элементов</span>
+            <button class="checklist-btn order small" id="orderBtnSmall">📝</button>
+        </div>
+    </div>
+
+    <!-- Telegram кнопка -->
+    <a href="https://t.me/Shkiril" 
+       class="telegram-float" 
+       target="_blank"
+       title="Написать в Telegram">
+        <span class="telegram-icon">✈️</span>
+        <span class="telegram-text">Написать в Telegram</span>
+    </a>
+
+    <!-- Модальное окно для увеличения фото -->
+    <div class="modal" id="imageModal">
+        <button class="modal-close" id="closeModal">×</button>
+        <button class="modal-nav modal-prev" id="prevModal">‹</button>
+        <button class="modal-nav modal-next" id="nextModal">›</button>
+        <div class="modal-content">
+            <img class="modal-img" id="modalImage" src="" alt="">
+        </div>
+    </div>
+
+    <!-- Модальное окно для заявки -->
+    <div class="order-modal" id="orderModal">
+        <div class="order-content">
+            <div class="order-header">
+                <div class="order-title">📝 Оформление заявки</div>
+                <button class="order-close" id="closeOrderModal">×</button>
+            </div>
+            
+            <div class="order-preview">
+                <div class="order-preview-title">📋 Выбранные варианты:</div>
+                <div class="order-items" id="orderPreview">
+                    <!-- Сюда будет подставляться выбранное -->
+                </div>
+            </div>
+            
+            <div class="order-form" id="orderForm">
+                <div class="form-group">
+                    <label class="form-label required">👤 Ваше имя</label>
+                    <input type="text" class="form-input" id="orderName" placeholder="Иван Иванов" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label required">📱 Ваш телефон</label>
+                    <input type="tel" class="form-input" id="orderPhone" placeholder="+7 999 123-45-67" required>
+                    <div class="form-note">Мы перезвоним для уточнения деталей</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">📧 Email (необязательно)</label>
+                    <input type="email" class="form-input" id="orderEmail" placeholder="email@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">💬 Комментарий к заявке</label>
+                    <textarea class="form-input form-textarea" id="orderComment" placeholder="Ваши пожелания, вопросы или особенности..."></textarea>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="order-btn telegram" id="sendToTelegram">
+                        <span>📤 Отправить в Telegram</span>
+                    </button>
+                    <button class="order-btn copy" id="copyOrder">
+                        <span>📋 Скопировать заявку</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <h3 style="margin-bottom: 15px; font-size: 24px;">✅ Заявка сформирована!</h3>
+                <p style="margin-bottom: 20px;">Скопируйте текст заявки и отправьте в Telegram @Shkiril</p>
+                <p style="font-size: 14px; color: #95a5a6;">Или нажмите на кнопку выше для автоматической отправки</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Добавляем предупреждение о пустой заявке -->
+    <div class="warning-modal" id="warningModal">
+        <div class="warning-content">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-title">Список выбора пуст!</div>
+            <div class="warning-text">
+                Выберите хотя бы один вариант мебели, прежде чем оформлять заявку.
+                Используйте кнопки <strong style="color: #4a6491;">"+"</strong> на карточках для добавления в список.
+            </div>
+            <div class="warning-actions">
+                <button class="warning-btn secondary" id="closeWarning">Понятно</button>
+                <button class="warning-btn primary" id="showChecklist">Открыть список</button>
+            </div>
+        </div>
+    </div>
+
+    <header id="top">
         <h1>Пакет стандарт для 1-комнатной квартиры</h1>
         <p>Полная комплектация мебелью. Три варианта на выбор в каждом модуле.</p>
+        <p style="margin-top: 10px; font-size: 16px; opacity: 0.9;">
+            <strong>Используйте чек-лист слева</strong> для выбора и кнопку <strong>"Заявка"</strong> для оформления
+        </p>
     </header>
 
     <div class="container">
 
         <!-- Спальня (комната) -->
-        <section class="section">
+        <section class="section" id="bedroom">
             <h2>Спальня (комната)</h2>
             <p>Выберите один из трёх вариантов комплектации:</p>
             <div class="variant-grid">
-                <!-- Вариант 1 - Карусель с фото 11, 12, 13, 14, 15 -->
-                <div class="variant-card">
+                <!-- Вариант 1 -->
+                <div class="variant-card" data-category="спальня" data-id="bed1" data-name="Вариант 1 - Шкаф, тумба, кровать мягкая">
+                    <button class="select-btn" data-item="bed1">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/спальня/11.jpg" alt="Спальня Вариант 1 — фото 1">
+                                <img src="images/спальня/11.jpg" 
+                                     alt="Спальня Вариант 1 — фото 1" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 1 — фото 1: Шкаф 3х створчатый с консолью">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/12.jpg" alt="Спальня Вариант 1 — фото 2">
+                                <img src="images/спальня/12.jpg" 
+                                     alt="Спальня Вариант 1 — фото 2" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 1 — фото 2: Тумба прикроватная и кровать">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/13.jpg" alt="Спальня Вариант 1 — фото 3">
+                                <img src="images/спальня/13.jpg" 
+                                     alt="Спальня Вариант 1 — фото 3" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 1 — фото 3: Общий вид спальни">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/14.jpg" alt="Спальня Вариант 1 — фото 4">
+                                <img src="images/спальня/14.jpg" 
+                                     alt="Спальня Вариант 1 — фото 4" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 1 — фото 4: Детали интерьера">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/15.jpg" alt="Спальня Вариант 1 — фото 5">
+                                <img src="images/спальня/15.jpg" 
+                                     alt="Спальня Вариант 1 — фото 5" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 1 — фото 5: Ортопедический матрас">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -401,24 +1512,40 @@
                     </div>
                 </div>
 
-                <!-- Вариант 2 - Карусель с фото 21, 22, 23, 24, 25 -->
-                <div class="variant-card">
+                <!-- Вариант 2 -->
+                <div class="variant-card" data-category="спальня" data-id="bed2" data-name="Вариант 2 - Шкаф, тумба, кровать">
+                    <button class="select-btn" data-item="bed2">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/спальня/21.jpg" alt="Спальня Вариант 2 — фото 1">
+                                <img src="images/спальня/21.jpg" 
+                                     alt="Спальня Вариант 2 — фото 1" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 2 — фото 1: Шкаф 3х створчатый с консолью">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/22.jpg" alt="Спальня Вариант 2 — фото 2">
+                                <img src="images/спальня/22.jpg" 
+                                     alt="Спальня Вариант 2 — фото 2" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 2 — фото 2: Прикроватная тумба">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/23.jpg" alt="Спальня Вариант 2 — фото 3">
+                                <img src="images/спальня/23.jpg" 
+                                     alt="Спальня Вариант 2 — фото 3" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 2 — фото 3: Кровать 140/160×200 см">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/24.jpg" alt="Спальня Вариант 2 — фото 4">
+                                <img src="images/спальня/24.jpg" 
+                                     alt="Спальня Вариант 2 — фото 4" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 2 — фото 4: Детали интерьера">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/25.jpg" alt="Спальня Вариант 2 — фото 5">
+                                <img src="images/спальня/25.jpg" 
+                                     alt="Спальня Вариант 2 — фото 5" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 2 — фото 5: Ортопедический матрас">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -435,24 +1562,40 @@
                     </div>
                 </div>
 
-                <!-- Вариант 3 - Карусель с фото 31, 32, 33, 34, 35 -->
-                <div class="variant-card">
+                <!-- Вариант 3 -->
+                <div class="variant-card" data-category="спальня" data-id="bed3" data-name="Вариант 3 - Шкаф, 2 тумбы, кровать">
+                    <button class="select-btn" data-item="bed3">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/спальня/31.jpg" alt="Спальня Вариант 3 — фото 1">
+                                <img src="images/спальня/31.jpg" 
+                                     alt="Спальня Вариант 3 — фото 1" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 3 — фото 1: Шкаф 3х створчатый">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/32.jpg" alt="Спальня Вариант 3 — фото 2">
+                                <img src="images/спальня/32.jpg" 
+                                     alt="Спальня Вариант 3 — фото 2" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 3 — фото 2: Две прикроватные тумбы">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/33.jpg" alt="Спальня Вариант 3 — фото 3">
+                                <img src="images/спальня/33.jpg" 
+                                     alt="Спальня Вариант 3 — фото 3" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 3 — фото 3: Кровать 140/160×200 см">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/34.jpg" alt="Спальня Вариант 3 — фото 4">
+                                <img src="images/спальня/34.jpg" 
+                                     alt="Спальня Вариант 3 — фото 4" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 3 — фото 4: Детали интерьера">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/спальня/35.jpg" alt="Спальня Вариант 3 — фото 5">
+                                <img src="images/спальня/35.jpg" 
+                                     alt="Спальня Вариант 3 — фото 5" 
+                                     class="zoomable"
+                                     data-description="Спальня Вариант 3 — фото 5: Ортопедический матрас">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -472,21 +1615,31 @@
         </section>
 
         <!-- Диван -->
-        <section class="section">
+        <section class="section" id="sofa">
             <h2>Диван для кухни-гостиной или в спальню</h2>
             <div class="variant-grid">
                 <!-- Вариант 1 -->
-                <div class="variant-card">
+                <div class="variant-card" data-category="диван" data-id="sofa1" data-name="Диван Вариант 1 - 2240×1100×710 мм">
+                    <button class="select-btn" data-item="sofa1">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/диваны/0imio0kfduo19ym85g7ipdrdj78k6afl.jpg" alt="Диван Вариант 1 — фото 1">
+                                <img src="images/диваны/0imio0kfduo19ym85g7ipdrdj78k6afl.jpg" 
+                                     alt="Диван Вариант 1 — фото 1" 
+                                     class="zoomable"
+                                     data-description="Диван Вариант 1 — фото 1: Размеры 2240×1100×710 мм">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/диваны/3ckf9zvuu4bheuxit5itq1iljtuye52o.jpg" alt="Диван Вариант 1 — фото 2">
+                                <img src="images/диваны/3ckf9zvuu4bheuxit5itq1iljtuye52o.jpg" 
+                                     alt="Диван Вариант 1 — фото 2" 
+                                     class="zoomable"
+                                     data-description="Диван Вариант 1 — фото 2: Спальное место 1460×1940 мм">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/диваны/jzl8edzs3nyqj5kzm0nhucfh9i81hz8n.jpg" alt="Диван Вариант 1 — фото 3">
+                                <img src="images/диваны/jzl8edzs3nyqj5kzm0nhucfh9i81hz8n.jpg" 
+                                     alt="Диван Вариант 1 — фото 3" 
+                                     class="zoomable"
+                                     data-description="Диван Вариант 1 — фото 3: Трансформация Еврокнижка">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -505,17 +1658,27 @@
                 </div>
 
                 <!-- Вариант 2 -->
-                <div class="variant-card">
+                <div class="variant-card" data-category="диван" data-id="sofa2" data-name="Диван Вариант 2 - 2000×1050×920 мм">
+                    <button class="select-btn" data-item="sofa2">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/диваны/05vtzw7qe952sksj5gn3at3vx0wkzyur.jpg" alt="Диван Вариант 2 — фото 1">
+                                <img src="images/диваны/05vtzw7qe952sksj5gn3at3vx0wkzyur.jpg" 
+                                     alt="Диван Вариант 2 — фото 1" 
+                                     class="zoomable"
+                                     data-description="Диван Вариант 2 — фото 1: Размеры 2000×1050×920 мм">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/диваны/13t1qb3ifv4dhazhigh6epdouujl5kot.jpg" alt="Диван Вариант 2 — фото 2">
+                                <img src="images/диваны/13t1qb3ifv4dhazhigh6epdouujl5kot.jpg" 
+                                     alt="Диван Вариант 2 — фото 2" 
+                                     class="zoomable"
+                                     data-description="Диван Вариант 2 — фото 2: Спальное место 1500×1920 мм">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/диваны/6cwiowjeet0ccmaq59khlg2xo46m6o68.jpg" alt="Диван Вариант 2 — фото 3">
+                                <img src="images/диваны/6cwiowjeet0ccmaq59khlg2xo46m6o68.jpg" 
+                                     alt="Диван Вариант 2 — фото 3" 
+                                     class="zoomable"
+                                     data-description="Диван Вариант 2 — фото 3: Высота сиденья 450 мм">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -533,18 +1696,28 @@
                     </div>
                 </div>
 
-                <!-- Вариант 3 - ИЗМЕНЕНО ОПИСАНИЕ -->
-                <div class="variant-card">
+                <!-- Вариант 3 -->
+                <div class="variant-card" data-category="диван" data-id="sofa3" data-name="Диван Вариант 3 - 2050×1010×760 мм">
+                    <button class="select-btn" data-item="sofa3">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/диваны/2.jpg" alt="Диван Вариант 3 — фото 1">
+                                <img src="images/диваны/2.jpg" 
+                                     alt="Диван Вариант 3 — фото 1" 
+                                     class="zoomable"
+                                     data-description="Диван Вариант 3 — фото 1: Размеры 2050×1010×760 мм">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/диваны/3.jpg" alt="Диван Вариант 3 — фото 2">
+                                <img src="images/диваны/3.jpg" 
+                                     alt="Диван Вариант 3 — фото 2" 
+                                     class="zoomable"
+                                     data-description="Диван Вариант 3 — фото 2: Спальное место 1500×200 мм">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/диваны/4.jpg" alt="Диван Вариант 3 — фото 3">
+                                <img src="images/диваны/4.jpg" 
+                                     alt="Диван Вариант 3 — фото 3" 
+                                     class="zoomable"
+                                     data-description="Диван Вариант 3 — фото 3: Высота сиденья 450 мм">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -565,22 +1738,32 @@
         </section>
 
         <!-- Обеденная группа -->
-        <section class="section">
+        <section class="section" id="dining">
             <h2>Обеденная группа</h2>
             
             <div class="variant-grid">
                 <!-- Вариант 1 -->
-                <div class="variant-card">
+                <div class="variant-card" data-category="обеденная" data-id="table1" data-name="Стол Вариант 1 - Раскладной">
+                    <button class="select-btn" data-item="table1">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/обеденные/borg_taksonija_medov_+_052_mazerati-19-500x500.jpg" alt="Стол Вариант 1 — фото 1">
+                                <img src="images/обеденные/borg_taksonija_medov_+_052_mazerati-19-500x500.jpg" 
+                                     alt="Стол Вариант 1 — фото 1" 
+                                     class="zoomable"
+                                     data-description="Стол Вариант 1 — фото 1: Раскладной обеденный стол">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/обеденные/brooklyn_s-023_black_tacson_med_(1)-500x500.jpg" alt="Стол Вариант 1 — фото 2">
+                                <img src="images/обеденные/brooklyn_s-023_black_tacson_med_(1)-500x500.jpg" 
+                                     alt="Стол Вариант 1 — фото 2" 
+                                     class="zoomable"
+                                     data-description="Стол Вариант 1 — фото 2: Раскладной стол (вид сверху)">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/обеденные/brooklyn_s-023_black_tacson_med_(2)-500x500.jpg" alt="Стол Вариант 1 — фото 3">
+                                <img src="images/обеденные/brooklyn_s-023_black_tacson_med_(2)-500x500.jpg" 
+                                     alt="Стол Вариант 1 — фото 3" 
+                                     class="zoomable"
+                                     data-description="Стол Вариант 1 — фото 3: Раскладной стол в разложенном виде">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -593,17 +1776,27 @@
                 </div>
 
                 <!-- Вариант 2 -->
-                <div class="variant-card">
+                <div class="variant-card" data-category="обеденная" data-id="table2" data-name="Стол Вариант 2 - Круглый">
+                    <button class="select-btn" data-item="table2">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/обеденные/2222.jpg" alt="Стол Вариант 2 — фото 1">
+                                <img src="images/обеденные/2222.jpg" 
+                                     alt="Стол Вариант 2 — фото 1" 
+                                     class="zoomable"
+                                     data-description="Стол Вариант 2 — фото 1: Круглый обеденный стол">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/обеденные/231.jpg" alt="Стол Вариант 2 — фото 2">
+                                <img src="images/обеденные/231.jpg" 
+                                     alt="Стол Вариант 2 — фото 2" 
+                                     class="zoomable"
+                                     data-description="Стол Вариант 2 — фото 2: Круглый стол в интерьере">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/обеденные/с1тол.jpg" alt="Стол Вариант 2 — фото 3">
+                                <img src="images/обеденные/с1тол.jpg" 
+                                     alt="Стол Вариант 2 — фото 3" 
+                                     class="zoomable"
+                                     data-description="Стол Вариант 2 — фото 3: Круглый стол с стульями">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -616,17 +1809,27 @@
                 </div>
 
                 <!-- Вариант 3 -->
-                <div class="variant-card">
+                <div class="variant-card" data-category="обеденная" data-id="table3" data-name="Стол Вариант 3 - Нераскладной">
+                    <button class="select-btn" data-item="table3">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/обеденные/1 (3).jpg" alt="Стол Вариант 3 — фото 1">
+                                <img src="images/обеденные/1 (3).jpg" 
+                                     alt="Стол Вариант 3 — фото 1" 
+                                     class="zoomable"
+                                     data-description="Стол Вариант 3 — фото 1: Нераскладной обеденный стол">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/обеденные/1 (1).jpg" alt="Стол Вариант 3 — фото 2">
+                                <img src="images/обеденные/1 (1).jpg" 
+                                     alt="Стол Вариант 3 — фото 2" 
+                                     class="zoomable"
+                                     data-description="Стол Вариант 3 — фото 2: Стол прямоугольной формы">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/обеденные/1 (2).jpg" alt="Стол Вариант 3 — фото 3">
+                                <img src="images/обеденные/1 (2).jpg" 
+                                     alt="Стол Вариант 3 — фото 3" 
+                                     class="zoomable"
+                                     data-description="Стол Вариант 3 — фото 3: Стол в современном интерьере">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -643,16 +1846,28 @@
             <div class="chairs-container">
                 <h3 class="chairs-title">Модель стула на выбор</h3>
                 <div class="chairs-grid">
-                    <div class="chair-item">
-                        <img src="images/обеденные/052_black_velluto_25(1)-500x500.jpg" alt="Стул 1">
+                    <div class="chair-item" data-category="стулья" data-id="chair1" data-name="Стул Модель 1">
+                        <button class="select-btn" data-item="chair1">➕</button>
+                        <img src="images/обеденные/052_black_velluto_25(1)-500x500.jpg" 
+                             alt="Стул 1" 
+                             class="zoomable"
+                             data-description="Стул Модель 1: Черный велюр, классический дизайн">
                         <p class="chair-name">Модель 1</p>
                     </div>
-                    <div class="chair-item">
-                        <img src="images/обеденные/032_black_velluto_10_(1)-500x500.jpg" alt="Стул 2">
+                    <div class="chair-item" data-category="стулья" data-id="chair2" data-name="Стул Модель 2">
+                        <button class="select-btn" data-item="chair2">➕</button>
+                        <img src="images/обеденные/032_black_velluto_10_(1)-500x500.jpg" 
+                             alt="Стул 2" 
+                             class="zoomable"
+                             data-description="Стул Модель 2: Черный велюр, современный дизайн">
                         <p class="chair-name">Модель 2</p>
                     </div>
-                    <div class="chair-item">
-                        <img src="images/обеденные/073_black_velluto-18_(01)-500x500.jpg" alt="Стул 3">
+                    <div class="chair-item" data-category="стулья" data-id="chair3" data-name="Стул Модель 3">
+                        <button class="select-btn" data-item="chair3">➕</button>
+                        <img src="images/обеденные/073_black_velluto-18_(01)-500x500.jpg" 
+                             alt="Стул 3" 
+                             class="zoomable"
+                             data-description="Стул Модель 3: Черный велюр, эргономичный дизайн">
                         <p class="chair-name">Модель 3</p>
                     </div>
                 </div>
@@ -663,19 +1878,26 @@
             </div>
         </section>
 
-        <!-- Прихожая - ТРИ КАРУСЕЛИ -->
-        <section class="section">
+        <!-- Прихожая - ВОССТАНАВЛИВАЕМ КАРУСЕЛИ -->
+        <section class="section" id="hallway">
             <h2>Прихожая</h2>
             <div class="variant-grid">
-                <!-- Вариант 1 - Карусель с 2 фото -->
-                <div class="variant-card">
+                <!-- Вариант 1 - ВОССТАНАВЛИВАЕМ КАРУСЕЛЬ -->
+                <div class="variant-card" data-category="прихожая" data-id="hall1" data-name="Прихожая Вариант 1 - Небольшой комплект">
+                    <button class="select-btn" data-item="hall1">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/прихожая/49231_prikhozhaya-4-olga-milk.jpg" alt="Прихожая Вариант 1 - фото 1">
+                                <img src="images/прихожая/49231_prikhozhaya-4-olga-milk.jpg" 
+                                     alt="Прихожая Вариант 1 — фото 1" 
+                                     class="zoomable"
+                                     data-description="Прихожая Вариант 1 — фото 1: Небольшой комплект прихожей со шкафом">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/прихожая/52756_olga-loft-prikhozhaya-4-.jpg" alt="Прихожая Вариант 1 - фото 2">
+                                <img src="images/прихожая/52756_olga-loft-prikhozhaya-4-.jpg" 
+                                     alt="Прихожая Вариант 1 — фото 2" 
+                                     class="zoomable"
+                                     data-description="Прихожая Вариант 1 — фото 2: Небольшой комплект прихожей с вешалкой">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -688,15 +1910,22 @@
                     </div>
                 </div>
 
-                <!-- Вариант 2 - Карусель с 2 фото -->
-                <div class="variant-card">
+                <!-- Вариант 2 - ВОССТАНАВЛИВАЕМ КАРУСЕЛЬ -->
+                <div class="variant-card" data-category="прихожая" data-id="hall2" data-name="Прихожая Вариант 2 - Вешалка + зеркало">
+                    <button class="select-btn" data-item="hall2">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/прихожая/v2_46942_granzh-1-prikhozhaya-veshalka.jpg" alt="Прихожая Вариант 2 - вешалка">
+                                <img src="images/прихожая/v2_46942_granzh-1-prikhozhaya-veshalka.jpg" 
+                                     alt="Прихожая Вариант 2 — вешалка" 
+                                     class="zoomable"
+                                     data-description="Прихожая Вариант 2 — вешалка: Вешалка с тумбой в стиле лофт">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/прихожая/зеркало.jpg" alt="Прихожая Вариант 2 - зеркало">
+                                <img src="images/прихожая/зеркало.jpg" 
+                                     alt="Прихожая Вариант 2 — зеркало" 
+                                     class="zoomable"
+                                     data-description="Прихожая Вариант 2 — зеркало: Большое зеркало в деревянной раме">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -708,15 +1937,22 @@
                     </div>
                 </div>
 
-                <!-- Вариант 3 - Карусель с 2 фото -->
-                <div class="variant-card">
+                <!-- Вариант 3 - Карусель (уже была правильная) -->
+                <div class="variant-card" data-category="прихожая" data-id="hall3" data-name="Прихожая Вариант 3 - Комплект с ящиками">
+                    <button class="select-btn" data-item="hall3">➕</button>
                     <div class="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="images/прихожая/44418_charli-prikhozhaya-s-yaschikami-.jpg" alt="Прихожая Вариант 3 - фото 1">
+                                <img src="images/прихожая/44418_charli-prikhozhaya-s-yaschikami-.jpg" 
+                                     alt="Прихожая Вариант 3 — фото 1" 
+                                     class="zoomable"
+                                     data-description="Прихожая Вариант 3 — фото 1: Комплект прихожей с ящиками">
                             </div>
                             <div class="carousel-item">
-                                <img src="images/прихожая/41332_charli-shkaf-3-kh-stvorchatyy-.jpg" alt="Прихожая Вариант 3 - фото 2">
+                                <img src="images/прихожая/41332_charli-shkaf-3-kh-stvorchatyy-.jpg" 
+                                     alt="Прихожая Вариант 3 — фото 2" 
+                                     class="zoomable"
+                                     data-description="Прихожая Вариант 3 — фото 2: Шкаф 3х створчатый">
                             </div>
                         </div>
                         <button class="carousel-btn prev">‹</button>
@@ -732,7 +1968,7 @@
         </section>
 
         <!-- Кухня -->
-        <section class="section">
+        <section class="section" id="kitchen">
             <h2>Кухня</h2>
             <p>Кухонный гарнитур до 2.00 метров, цветовое решение на выбор, модульность подгоняется под помещение.</p>
             <p><strong>В стоимость входит:</strong></p>
@@ -747,8 +1983,12 @@
             <!-- Три варианта кухни -->
             <div class="variant-grid" style="margin-top: 30px;">
                 <!-- Вариант 1 -->
-                <div class="variant-card">
-                    <img src="images/кухни/WhatsApp Image 2025-12-02 at 13.40.06.jpeg" alt="Кухня Вариант 1" class="kitchen-photo">
+                <div class="variant-card" data-category="кухня" data-id="kitchen1" data-name="Кухня Вариант 1 - Белые фасады с деревом">
+                    <button class="select-btn" data-item="kitchen1">➕</button>
+                    <img src="images/кухни/WhatsApp Image 2025-12-02 at 13.40.06.jpeg" 
+                         alt="Кухня Вариант 1" 
+                         class="kitchen-photo zoomable"
+                         data-description="Кухня Вариант 1: Кухонный гарнитур с белыми фасадами и деревянными элементами">
                     <div class="variant-content">
                         <h3>Вариант 1</h3>
                         <p>Кухонный гарнитур с белыми фасадами и деревянными элементами</p>
@@ -756,8 +1996,12 @@
                 </div>
                 
                 <!-- Вариант 2 -->
-                <div class="variant-card">
-                    <img src="images/кухни/WhatsApp Image 2025-12-02 at 12.36.07.jpeg" alt="Кухня Вариант 2" class="kitchen-photo">
+                <div class="variant-card" data-category="кухня" data-id="kitchen2" data-name="Кухня Вариант 2 - Классический стиль">
+                    <button class="select-btn" data-item="kitchen2">➕</button>
+                    <img src="images/кухни/WhatsApp Image 2025-12-02 at 12.36.07.jpeg" 
+                         alt="Кухня Вариант 2" 
+                         class="kitchen-photo zoomable"
+                         data-description="Кухня Вариант 2: Кухонный гарнитур в классическом стиле с темными фасадами">
                     <div class="variant-content">
                         <h3>Вариант 2</h3>
                         <p>Кухонный гарнитур в классическом стиле с темными фасадами</p>
@@ -765,8 +2009,12 @@
                 </div>
                 
                 <!-- Вариант 3 -->
-                <div class="variant-card">
-                    <img src="images/кухни/WhatsApp Image 2025-12-02 at 13.40.03.jpeg" alt="Кухня Вариант 3" class="kitchen-photo">
+                <div class="variant-card" data-category="кухня" data-id="kitchen3" data-name="Кухня Вариант 3 - Глянцевые фасады">
+                    <button class="select-btn" data-item="kitchen3">➕</button>
+                    <img src="images/кухни/WhatsApp Image 2025-12-02 at 13.40.03.jpeg" 
+                         alt="Кухня Вариант 3" 
+                         class="kitchen-photo zoomable"
+                         data-description="Кухня Вариант 3: Современный кухонный гарнитур с глянцевыми фасадами">
                     <div class="variant-content">
                         <h3>Вариант 3</h3>
                         <p>Современный кухонный гарнитур с глянцевыми фасадами</p>
@@ -776,49 +2024,49 @@
         </section>
 
         <!-- Дополнительная информация -->
-<section class="package-details">
-    <h3>📋 Полный комплект пакета "Стандарт для 1-комнатной квартиры":</h3>
-    <ul>
-        <li><strong>Спальня:</strong> Шкаф 3х створчатый + прикроватная тумба 2 шт. + кровать с матрасом</li>
-        <li><strong>Диван:</strong> Раскладной с ящиком для белья</li>
-        <li><strong>Обеденная группа:</strong> Стол + 2 стула</li>
-        <li><strong>Комплект для прихожей</strong></li>
-        <li><strong>Индивидуальный проект прямой кухни</strong></li>
-        <li><strong>Кухонный гарнитур включает:</strong>
+        <section class="package-details">
+            <h3>📋 Полный комплект пакета "Стандарт для 1-комнатной квартиры":</h3>
             <ul>
-                <li>Фурнитура с доводчиками</li>
-                <li>Направляющие скрытого монтажа с доводчиками</li>
-                <li>Столешница 38 мм</li>
-                <li>Стеновая панель</li>
-                <li>Мойка иск. камень + смеситель</li>
-                <li>Сушилка двухуровневая</li>
+                <li><strong>Спальня:</strong> Шкаф 3х створчатый + прикроватная тумба 2 шт. + кровать с матрасом</li>
+                <li><strong>Диван:</strong> Раскладной с ящиком для белья</li>
+                <li><strong>Обеденная группа:</strong> Стол + 2 стула</li>
+                <li><strong>Комплект для прихожей</strong></li>
+                <li><strong>Индивидуальный проект прямой кухни</strong></li>
+                <li><strong>Кухонный гарнитур включает:</strong>
+                    <ul>
+                        <li>Фурнитура с доводчиками</li>
+                        <li>Направляющие скрытого монтажа с доводчиками</li>
+                        <li>Столешница 38 мм</li>
+                        <li>Стеновая панель</li>
+                        <li>Мойка иск. камень + смеситель</li>
+                        <li>Сушилка двухуровневая</li>
+                    </ul>
+                </li>
+                <li><strong>Техника:</strong>
+                    <ul>
+                        <li>Холодильник</li>
+                        <li>Варочная поверхность</li>
+                        <li>Вытяжка</li>
+                        <li>Микроволновка</li>
+                    </ul>
+                </li>
+                <li><strong>Текстиль:</strong> Карниз + тюль + шторы блэкаут - 2 комплекта</li>
+                <li><strong>Сервис:</strong> Доставка, подъем, сборка</li>
+                <li><strong>Расширенный комплект для подготовки квартиры (опционально, 24 900 руб.):</strong>
+                    <ul>
+                        <li>Посуда</li>
+                        <li>Чайник</li>
+                        <li>Постельное бельё и полотенца</li>
+                        <li>Утюг и гладильная доска</li>
+                        <li>Сушка для белья</li>
+                        <li>Мусорное ведро</li>
+                        <li>Ёршик</li>
+                        <li>Корзина для белья</li>
+                        <li>Декор</li>
+                    </ul>
+                </li>
             </ul>
-        </li>
-        <li><strong>Техника:</strong>
-            <ul>
-                <li>Холодильник</li>
-                <li>Варочная поверхность</li>
-                <li>Вытяжка</li>
-                <li>Микроволновка</li>
-            </ul>
-        </li>
-        <li><strong>Текстиль:</strong> Карниз + тюль + шторы блэкаут - 2 комплекта</li>
-        <li><strong>Сервис:</strong> Доставка, подъем, сборка</li>
-        <li><strong>Расширенный комплект для подготовки квартиры (опционально, 24 900 руб.):</strong>
-            <ul>
-                <li>Посуда</li>
-                <li>Чайник</li>
-                <li>Постельное бельё и полотенца</li>
-                <li>Утюг и гладильная доска</li>
-                <li>Сушка для белья</li>
-                <li>Мусорное ведро</li>
-                <li>Ёршик</li>
-                <li>Корзина для белья</li>
-                <li>Декор</li>
-            </ul>
-        </li>
-    </ul>
-</section>
+        </section>
 
         <!-- Гибкие возможности -->
         <section class="highlight">
@@ -831,9 +2079,492 @@
     <footer>
         <p>© 2026 Пакет стандарт для 1-комнатной квартиры</p>
         <p>Контакты: 8-911-925-88-56 | Brwmebelspb@yandex.ru</p>
+        <p style="margin-top: 10px; font-size: 14px; opacity: 0.8;">
+            💬 Быстрый ответ в Telegram: <a href="https://t.me/Shkiril" style="color: #34b7f1; text-decoration: none;">@Shkiril</a>
+        </p>
     </footer>
 
     <script>
+        // ========== 1. ПРОГРЕСС-БАР ПРОКРУТКИ ==========
+        const progressBar = document.getElementById('progressBar');
+        
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+        });
+
+        // ========== 2. БЫСТРАЯ НАВИГАЦИЯ ==========
+        const quickNav = document.getElementById('quickNav');
+        const navLinks = quickNav.querySelectorAll('a');
+        const sections = document.querySelectorAll('.section');
+        const header = document.getElementById('top');
+
+        // Обновление активной ссылки при прокрутке
+        window.addEventListener('scroll', function() {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            if (pageYOffset < 100) {
+                current = 'top';
+            }
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Плавная прокрутка при клике
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = targetId === '#top' ? header : document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 20,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // ========== 3. АНИМАЦИИ ПОЯВЛЕНИЯ ==========
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Для карточек внутри секции
+                    if (entry.target.classList.contains('section')) {
+                        const cards = entry.target.querySelectorAll('.variant-card');
+                        cards.forEach((card, index) => {
+                            setTimeout(() => {
+                                card.classList.add('visible');
+                            }, index * 100);
+                        });
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Наблюдаем за всеми секциями
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // ========== 4. ИНТЕРАКТИВНЫЙ ЧЕК-ЛИСТ ==========
+        const checklistToggle = document.getElementById('checklistToggle');
+        const checklistContainer = document.getElementById('checklistContainer');
+        const checklistItems = document.getElementById('checklistItems');
+        const clearChecklist = document.getElementById('clearChecklist');
+        const selectedCount = document.getElementById('selectedCount');
+        const checklistSummary = document.getElementById('checklistSummary');
+        const orderBtn = document.getElementById('orderBtn');
+        const orderBtnSmall = document.getElementById('orderBtnSmall');
+
+        let selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
+
+        // 1. СЧЁТЧИК НА КНОПКЕ ЧЕК-ЛИСТА
+        function updateChecklistCounter() {
+            const count = Object.keys(selectedItems).length;
+            
+            // Обновляем текст кнопки
+            if (count > 0) {
+                checklistToggle.innerHTML = `📋<span class="checklist-counter">${count}</span>`;
+            } else {
+                checklistToggle.innerHTML = '📋';
+            }
+            
+            // Обновляем title (подсказку при наведении)
+            if (count > 0) {
+                checklistToggle.title = `Выбрано элементов: ${count}. Нажмите для просмотра`;
+            } else {
+                checklistToggle.title = 'Список выбора. Нажмите для просмотра';
+            }
+            
+            // Анимация кнопки заявки если есть выбранные элементы
+            if (count > 0) {
+                orderBtn.classList.add('has-items');
+            } else {
+                orderBtn.classList.remove('has-items');
+            }
+        }
+        
+        // 2. УЛУЧШЕННЫЕ УВЕДОМЛЕНИЯ
+        function showNotification(message, type = 'add') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type === 'remove' ? 'remove' : ''}`;
+            
+            const icon = type === 'remove' ? '❌' : '✅';
+            notification.innerHTML = `
+                <span style="font-size: 20px;">${icon}</span>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Удаляем уведомление через 3 секунды
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 2700);
+        }
+
+        // Загружаем сохранённые выборы
+        function loadChecklist() {
+            updateChecklistDisplay();
+            updateSelectButtons();
+            updateSelectedCount();
+            updateChecklistCounter(); // Добавляем обновление счетчика
+            addTooltipsToSelectButtons(); // Добавляем подсказки
+        }
+
+        // Обновление отображения чек-листа
+        function updateChecklistDisplay() {
+            const items = Object.values(selectedItems);
+            
+            if (items.length === 0) {
+                checklistItems.innerHTML = '<div class="checklist-empty">Выберите понравившиеся варианты</div>';
+                checklistSummary.style.display = 'none';
+                return;
+            }
+
+            checklistSummary.style.display = 'block';
+            
+            // Группируем по категориям
+            const grouped = {};
+            items.forEach(item => {
+                if (!grouped[item.category]) {
+                    grouped[item.category] = [];
+                }
+                grouped[item.category].push(item);
+            });
+
+            let html = '';
+            
+            // Русские названия категорий
+            const categoryNames = {
+                'спальня': 'Спальня',
+                'диван': 'Диван',
+                'обеденная': 'Обеденная группа',
+                'стулья': 'Стулья',
+                'прихожая': 'Прихожая',
+                'кухня': 'Кухня'
+            };
+
+            Object.keys(grouped).forEach(category => {
+                html += `<div class="checklist-category">${categoryNames[category] || category}</div>`;
+                
+                grouped[category].forEach(item => {
+                    html += `
+                        <div class="checklist-item" data-id="${item.id}">
+                            <input type="checkbox" class="checklist-checkbox" checked>
+                            <span class="checklist-label">${item.name}</span>
+                            <button class="select-btn small" onclick="removeFromChecklist('${item.id}')">❌</button>
+                        </div>
+                    `;
+                });
+            });
+
+            checklistItems.innerHTML = html;
+            
+            // Добавляем обработчики для чекбоксов
+            checklistItems.querySelectorAll('.checklist-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const itemId = this.closest('.checklist-item').dataset.id;
+                    if (!this.checked) {
+                        removeFromChecklist(itemId);
+                    }
+                });
+            });
+        }
+
+        // Обновление кнопок выбора на карточках
+        function updateSelectButtons() {
+            document.querySelectorAll('.select-btn').forEach(btn => {
+                const itemId = btn.dataset.item;
+                if (selectedItems[itemId]) {
+                    btn.classList.add('selected');
+                    btn.innerHTML = '✓';
+                } else {
+                    btn.classList.remove('selected');
+                    btn.innerHTML = '➕';
+                }
+            });
+        }
+
+        // Обновление счётчика выбранных элементов
+        function updateSelectedCount() {
+            const count = Object.keys(selectedItems).length;
+            selectedCount.textContent = count;
+        }
+
+        // Добавление в чек-лист
+        function addToChecklist(itemId, category, name) {
+            selectedItems[itemId] = {
+                id: itemId,
+                category: category,
+                name: name,
+                date: new Date().toISOString()
+            };
+            
+            localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+            loadChecklist();
+            
+            // Обновляем счётчик
+            updateChecklistCounter();
+            
+            // Анимация кнопки
+            const btn = document.querySelector(`.select-btn[data-item="${itemId}"]`);
+            btn.classList.add('selected');
+            btn.innerHTML = '✓';
+            
+            // Уведомление
+            showNotification(`Добавлено: ${name}`);
+            
+            // Если это первый элемент - показываем подсказку про заявку
+            if (Object.keys(selectedItems).length === 1) {
+                setTimeout(() => {
+                    showNotification('📝 Теперь можно оформить заявку! Нажмите кнопку "Заявка"', 'add');
+                }, 1000);
+            }
+        }
+
+        // Удаление из чек-листа
+        function removeFromChecklist(itemId) {
+            const itemName = selectedItems[itemId]?.name || 'Элемент';
+            delete selectedItems[itemId];
+            localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+            loadChecklist();
+            
+            // Обновляем счётчик
+            updateChecklistCounter();
+            
+            // Обновляем кнопку
+            const btn = document.querySelector(`.select-btn[data-item="${itemId}"]`);
+            if (btn) {
+                btn.classList.remove('selected');
+                btn.innerHTML = '➕';
+            }
+            
+            // Уведомление об удалении
+            showNotification(`Удалено: ${itemName}`, 'remove');
+        }
+
+        // ДОБАВЛЯЕМ ПОДСКАЗКИ ДЛЯ КНОПОК ВЫБОРА
+        function addTooltipsToSelectButtons() {
+            document.querySelectorAll('.select-btn').forEach(btn => {
+                // Удаляем старые подсказки если есть
+                const oldTooltip = btn.querySelector('.select-tooltip');
+                if (oldTooltip) {
+                    oldTooltip.remove();
+                }
+                
+                // Добавляем новую подсказку
+                const tooltip = document.createElement('div');
+                tooltip.className = 'select-tooltip';
+                
+                const itemId = btn.dataset.item;
+                if (selectedItems[itemId]) {
+                    tooltip.textContent = 'Удалить из списка';
+                } else {
+                    tooltip.textContent = 'Добавить в список';
+                }
+                
+                btn.appendChild(tooltip);
+            });
+        }
+
+        // Обработчики событий для кнопок выбора
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('select-btn') && !e.target.closest('.checklist-item')) {
+                const btn = e.target;
+                const itemId = btn.dataset.item;
+                const card = btn.closest('.variant-card, .chair-item');
+                const category = card.dataset.category;
+                const name = card.dataset.name;
+                
+                if (selectedItems[itemId]) {
+                    removeFromChecklist(itemId);
+                } else {
+                    addToChecklist(itemId, category, name);
+                }
+                
+                e.stopPropagation();
+            }
+        });
+
+        // Переключение видимости чек-листа
+        checklistToggle.addEventListener('click', function() {
+            checklistContainer.classList.toggle('active');
+            this.classList.toggle('active');
+            this.innerHTML = checklistContainer.classList.contains('active') ? 
+                (Object.keys(selectedItems).length > 0 ? 
+                    `✕<span class="checklist-counter">${Object.keys(selectedItems).length}</span>` : '✕') : 
+                (Object.keys(selectedItems).length > 0 ? 
+                    `📋<span class="checklist-counter">${Object.keys(selectedItems).length}</span>` : '📋');
+        });
+
+        // Очистка чек-листа
+        clearChecklist.addEventListener('click', function() {
+            if (Object.keys(selectedItems).length > 0) {
+                if (confirm('Очистить весь список выбранных вариантов?')) {
+                    selectedItems = {};
+                    localStorage.removeItem('selectedItems');
+                    loadChecklist();
+                    showNotification('Список очищен', 'remove');
+                }
+            }
+        });
+
+        // Закрытие чек-листа при клике вне его
+        document.addEventListener('click', function(e) {
+            if (!checklistContainer.contains(e.target) && !checklistToggle.contains(e.target)) {
+                checklistContainer.classList.remove('active');
+                checklistToggle.classList.remove('active');
+                checklistToggle.innerHTML = Object.keys(selectedItems).length > 0 ? 
+                    `📋<span class="checklist-counter">${Object.keys(selectedItems).length}</span>` : '📋';
+            }
+        });
+
+        // Загружаем чек-лист при загрузке страницы
+        document.addEventListener('DOMContentLoaded', loadChecklist);
+
+        // ========== 5. ПРЕДУПРЕЖДЕНИЕ О ПУСТОЙ ЗАЯВКЕ ==========
+        const warningModal = document.getElementById('warningModal');
+        const closeWarning = document.getElementById('closeWarning');
+        const showChecklistBtn = document.getElementById('showChecklist');
+        
+        function showWarningModal() {
+            warningModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeWarningModal() {
+            warningModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        closeWarning.addEventListener('click', closeWarningModal);
+        
+        showChecklistBtn.addEventListener('click', function() {
+            closeWarningModal();
+            // Открываем чек-лист
+            checklistContainer.classList.add('active');
+            checklistToggle.classList.add('active');
+            checklistToggle.innerHTML = Object.keys(selectedItems).length > 0 ? 
+                `✕<span class="checklist-counter">${Object.keys(selectedItems).length}</span>` : '✕';
+            
+            // Показываем подсказку в чек-листе
+            const checklistEmpty = checklistItems.querySelector('.checklist-empty');
+            if (checklistEmpty) {
+                checklistEmpty.innerHTML = `
+                    <div style="margin-bottom: 10px;">👆 Используйте кнопки <strong style="color: #4a6491;">"+"</strong> на карточках</div>
+                    <div>Добавьте понравившиеся варианты сюда</div>
+                `;
+            }
+        });
+        
+        warningModal.addEventListener('click', function(e) {
+            if (e.target === warningModal) {
+                closeWarningModal();
+            }
+        });
+
+        // ========== 6. МОДАЛЬНОЕ ОКНО ДЛЯ ФОТО - ИСПРАВЛЕННОЕ ==========
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const closeModal = document.getElementById('closeModal');
+        const prevModal = document.getElementById('prevModal');
+        const nextModal = document.getElementById('nextModal');
+        
+        let currentImages = [];
+        let currentIndex = 0;
+        
+        document.querySelectorAll('.zoomable').forEach((img, index) => {
+            img.addEventListener('click', function() {
+                currentImages = Array.from(document.querySelectorAll('.zoomable')).map(img => ({
+                    src: img.src,
+                    alt: img.alt,
+                    description: img.dataset.description || img.alt
+                }));
+                
+                currentIndex = currentImages.findIndex(item => item.src === this.src);
+                openModal(currentIndex);
+            });
+        });
+        
+        function openModal(index) {
+            if (currentImages.length === 0) return;
+            
+            currentIndex = index;
+            const currentImage = currentImages[currentIndex];
+            
+            modalImage.src = currentImage.src;
+            modalImage.alt = currentImage.alt;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModalFunc() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        function nextImage() {
+            if (currentImages.length === 0) return;
+            currentIndex = (currentIndex + 1) % currentImages.length;
+            openModal(currentIndex);
+        }
+        
+        function prevImage() {
+            if (currentImages.length === 0) return;
+            currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+            openModal(currentIndex);
+        }
+        
+        closeModal.addEventListener('click', closeModalFunc);
+        prevModal.addEventListener('click', prevImage);
+        nextModal.addEventListener('click', nextImage);
+        
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModalFunc();
+            }
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModalFunc();
+            } else if (e.key === 'ArrowRight') {
+                nextImage();
+            } else if (e.key === 'ArrowLeft') {
+                prevImage();
+            }
+        });
+
+        // ========== 7. КАРУСЕЛИ ==========
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.carousel').forEach(carousel => {
                 const inner = carousel.querySelector('.carousel-inner');
@@ -857,8 +2588,360 @@
                 });
             });
         });
+
+        // ========== 8. СИСТЕМА ЗАЯВОК ==========
+        const orderModal = document.getElementById('orderModal');
+        const closeOrderModal = document.getElementById('closeOrderModal');
+        const orderPreview = document.getElementById('orderPreview');
+        const orderForm = document.getElementById('orderForm');
+        const successMessage = document.getElementById('successMessage');
+        const sendToTelegram = document.getElementById('sendToTelegram');
+        const copyOrder = document.getElementById('copyOrder');
+        const orderName = document.getElementById('orderName');
+        const orderPhone = document.getElementById('orderPhone');
+        const orderEmail = document.getElementById('orderEmail');
+        const orderComment = document.getElementById('orderComment');
+
+        // Открытие модального окна заявки
+        function openOrderModal() {
+            const items = Object.values(selectedItems);
+            
+            if (items.length === 0) {
+                // Вместо alert показываем красивое модальное окно
+                showWarningModal();
+                return;
+            }
+            
+            // Обновляем предпросмотр
+            updateOrderPreview();
+            
+            // Сбрасываем форму
+            orderForm.style.display = 'block';
+            successMessage.classList.remove('active');
+            orderName.value = '';
+            orderPhone.value = '';
+            orderEmail.value = '';
+            orderComment.value = '';
+            
+            // Показываем модальное окно
+            orderModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Обновление предпросмотра заявки
+        function updateOrderPreview() {
+            const items = Object.values(selectedItems);
+            
+            if (items.length === 0) {
+                orderPreview.innerHTML = '<div class="order-item">Ничего не выбрано</div>';
+                return;
+            }
+
+            // Группируем по категориям
+            const grouped = {};
+            items.forEach(item => {
+                if (!grouped[item.category]) {
+                    grouped[item.category] = [];
+                }
+                grouped[item.category].push(item);
+            });
+
+            let html = '';
+            
+            // Эмодзи для категорий
+            const categoryEmojis = {
+                'спальня': '🛏️',
+                'диван': '🛋️',
+                'обеденная': '🍽️',
+                'стулья': '🪑',
+                'прихожая': '🚪',
+                'кухня': '🍳'
+            };
+
+            Object.keys(grouped).forEach(category => {
+                grouped[category].forEach(item => {
+                    const emoji = categoryEmojis[category] || '✅';
+                    html += `<div class="order-item">${emoji} ${item.name}</div>`;
+                });
+            });
+
+            orderPreview.innerHTML = html;
+        }
+
+        // Закрытие модального окна заявки
+        function closeOrderModalFunc() {
+            orderModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Генерация текста заявки
+        function generateOrderText() {
+            const items = Object.values(selectedItems);
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('ru-RU');
+            const timeStr = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            
+            let text = `🏠 ЗАЯВКА: Пакет стандарт для 1-комнатной квартиры\n`;
+            text += `📅 Дата: ${dateStr} ${timeStr}\n\n`;
+            
+            text += `📋 Выбранные варианты:\n`;
+            
+            // Группируем по категориям
+            const grouped = {};
+            items.forEach(item => {
+                if (!grouped[item.category]) {
+                    grouped[item.category] = [];
+                }
+                grouped[item.category].push(item);
+            });
+
+            const categoryEmojis = {
+                'спальня': '🛏️',
+                'диван': '🛋️',
+                'обеденная': '🍽️',
+                'стулья': '🪑',
+                'прихожая': '🚪',
+                'кухня': '🍳'
+            };
+
+            const categoryNames = {
+                'спальня': 'Спальня',
+                'диван': 'Диван',
+                'обеденная': 'Обеденная',
+                'стулья': 'Стулья',
+                'прихожая': 'Прихожая',
+                'кухня': 'Кухня'
+            };
+
+            Object.keys(grouped).forEach(category => {
+                const emoji = categoryEmojis[category] || '✅';
+                const name = categoryNames[category] || category;
+                
+                grouped[category].forEach(item => {
+                    text += `• ${emoji} ${name}: ${item.name.replace(`${name}: `, '')}\n`;
+                });
+            });
+
+            text += `\n👤 Контактные данные:\n`;
+            text += `Имя: ${orderName.value}\n`;
+            text += `Телефон: ${orderPhone.value}\n`;
+            
+            if (orderEmail.value.trim()) {
+                text += `Email: ${orderEmail.value}\n`;
+            }
+            
+            if (orderComment.value.trim()) {
+                text += `💬 Комментарий: ${orderComment.value}\n`;
+            }
+
+            return text;
+        }
+
+        // Отправка в Telegram
+        function sendToTelegramFunc() {
+            // Проверка обязательных полей
+            if (!orderName.value.trim()) {
+                showNotification('Пожалуйста, введите ваше имя', 'remove');
+                orderName.focus();
+                return;
+            }
+            
+            if (!orderPhone.value.trim()) {
+                showNotification('Пожалуйста, введите ваш телефон', 'remove');
+                orderPhone.focus();
+                return;
+            }
+
+            const orderText = generateOrderText();
+            const encodedText = encodeURIComponent(orderText);
+            const telegramUrl = `https://t.me/Shkiril?text=${encodedText}`;
+            
+            // Открываем Telegram
+            window.open(telegramUrl, '_blank');
+            
+            // Показываем сообщение об успехе
+            orderForm.style.display = 'none';
+            successMessage.classList.add('active');
+            
+            // Автоматически копируем в буфер обмена
+            copyToClipboard(orderText);
+        }
+
+        // Копирование заявки в буфер обмена
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                console.log('Заявка скопирована в буфер обмена');
+            }).catch(err => {
+                console.error('Ошибка копирования: ', err);
+                // Резервный метод для старых браузеров
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            });
+        }
+
+        // Обработчики событий для системы заявок
+        orderBtn.addEventListener('click', openOrderModal);
+        orderBtnSmall.addEventListener('click', openOrderModal);
+        closeOrderModal.addEventListener('click', closeOrderModalFunc);
+        
+        orderModal.addEventListener('click', function(e) {
+            if (e.target === orderModal) {
+                closeOrderModalFunc();
+            }
+        });
+        
+        sendToTelegram.addEventListener('click', sendToTelegramFunc);
+        
+        copyOrder.addEventListener('click', function() {
+            if (!orderName.value.trim() || !orderPhone.value.trim()) {
+                showNotification('Заполните Имя и Телефон', 'remove');
+                return;
+            }
+            
+            const orderText = generateOrderText();
+            copyToClipboard(orderText);
+            showNotification('Заявка скопирована в буфер обмена!');
+        });
+
+        // ========== 9. TELEGRAM КНОПКА ==========
+        const telegramBtn = document.querySelector('.telegram-float');
+        
+        setTimeout(() => {
+            telegramBtn.style.opacity = '1';
+        }, 1000);
+        
+        // Подсказки для пользователя
+        if (!localStorage.getItem('telegramShown')) {
+            setTimeout(() => {
+                const tooltip = document.createElement('div');
+                tooltip.innerHTML = '💬 Напишите нам в Telegram для быстрого ответа!';
+                tooltip.style.position = 'fixed';
+                tooltip.style.bottom = '90px';
+                tooltip.style.right = '25px';
+                tooltip.style.background = '#2c3e50';
+                tooltip.style.color = 'white';
+                tooltip.style.padding = '12px 16px';
+                tooltip.style.borderRadius = '10px';
+                tooltip.style.zIndex = '999';
+                tooltip.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                tooltip.style.maxWidth = '250px';
+                tooltip.style.animation = 'fadeIn 0.3s';
+                tooltip.style.fontSize = '14px';
+                tooltip.style.position = 'relative';
+                
+                tooltip.innerHTML += '<div style="position: absolute; bottom: -10px; right: 40px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #2c3e50;"></div>';
+                
+                document.body.appendChild(tooltip);
+                
+                setTimeout(() => {
+                    tooltip.style.opacity = '0';
+                    tooltip.style.transition = 'opacity 0.5s';
+                    setTimeout(() => tooltip.remove(), 500);
+                }, 5000);
+                
+                localStorage.setItem('telegramShown', 'true');
+            }, 2000);
+        }
+        
+        // Подсказка про увеличение фото
+        if (!localStorage.getItem('zoomHintShown')) {
+            setTimeout(() => {
+                const zoomTooltip = document.createElement('div');
+                zoomTooltip.innerHTML = '🔍 Кликните на любую фотографию для увеличения';
+                zoomTooltip.style.position = 'fixed';
+                zoomTooltip.style.top = '100px';
+                zoomTooltip.style.left = '50%';
+                zoomTooltip.style.transform = 'translateX(-50%)';
+                zoomTooltip.style.background = '#4a6491';
+                zoomTooltip.style.color = 'white';
+                zoomTooltip.style.padding = '12px 20px';
+                zoomTooltip.style.borderRadius = '10px';
+                zoomTooltip.style.zIndex = '999';
+                zoomTooltip.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                zoomTooltip.style.maxWidth = '300px';
+                zoomTooltip.style.animation = 'fadeIn 0.3s';
+                zoomTooltip.style.fontSize = '14px';
+                zoomTooltip.style.textAlign = 'center';
+                
+                document.body.appendChild(zoomTooltip);
+                
+                setTimeout(() => {
+                    zoomTooltip.style.opacity = '0';
+                    zoomTooltip.style.transition = 'opacity 0.5s';
+                    setTimeout(() => zoomTooltip.remove(), 500);
+                }, 5000);
+                
+                localStorage.setItem('zoomHintShown', 'true');
+            }, 3000);
+        }
+
+        // Подсказка про чек-лист
+        if (!localStorage.getItem('checklistHintShown')) {
+            setTimeout(() => {
+                const checklistTooltip = document.createElement('div');
+                checklistTooltip.innerHTML = '📋 Используйте чек-лист для сохранения понравившихся вариантов';
+                checklistTooltip.style.position = 'fixed';
+                checklistTooltip.style.bottom = '180px';
+                checklistTooltip.style.left = '20px';
+                checklistTooltip.style.background = '#4a6491';
+                checklistTooltip.style.color = 'white';
+                checklistTooltip.style.padding = '12px 16px';
+                checklistTooltip.style.borderRadius = '10px';
+                checklistTooltip.style.zIndex = '999';
+                checklistTooltip.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                checklistTooltip.style.maxWidth = '250px';
+                checklistTooltip.style.animation = 'fadeIn 0.3s';
+                checklistTooltip.style.fontSize = '14px';
+                
+                document.body.appendChild(checklistTooltip);
+                
+                setTimeout(() => {
+                    checklistTooltip.style.opacity = '0';
+                    checklistTooltip.style.transition = 'opacity 0.5s';
+                    setTimeout(() => checklistTooltip.remove(), 500);
+                }, 5000);
+                
+                localStorage.setItem('checklistHintShown', 'true');
+            }, 4000);
+        }
+
+        // ПЕРВОНАЧАЛЬНАЯ ПОДСКАЗКА
+        function showInitialHint() {
+            if (Object.keys(selectedItems).length === 0 && !localStorage.getItem('initialHintShown')) {
+                setTimeout(() => {
+                    const hint = document.createElement('div');
+                    hint.className = 'notification';
+                    hint.innerHTML = `
+                        <span style="font-size: 20px;">👆</span>
+                        <span>Нажмите <strong style="color: #4a6491;">"+"</strong> на карточках чтобы добавить в список</span>
+                    `;
+                    
+                    document.body.appendChild(hint);
+                    
+                    setTimeout(() => {
+                        hint.style.animation = 'fadeOut 0.3s ease';
+                        setTimeout(() => {
+                            if (hint.parentNode) {
+                                hint.parentNode.removeChild(hint);
+                            }
+                        }, 300);
+                    }, 5000);
+                    
+                    localStorage.setItem('initialHintShown', 'true');
+                }, 2000);
+            }
+        }
+
+        // Запускаем начальную подсказку
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChecklist();
+            showInitialHint();
+        });
     </script>
 
 </body>
 </html>
-
